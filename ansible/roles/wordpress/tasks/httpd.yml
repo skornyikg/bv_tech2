@@ -1,0 +1,13 @@
+---
+- name: Install httpd
+  yum:
+    name: httpd
+    state: latest
+    
+- name: Make sure httpd is enabled
+  systemd:
+    enabled: yes
+    masked: no
+    name: httpd
+  notify:
+    - Restart httpd
