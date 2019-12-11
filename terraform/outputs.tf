@@ -9,7 +9,3 @@ output "wp_alb_public_dns" {
 output "wp_server_domain" {
   value = aws_route53_record.wp_server_domain.*.fqdn
 }
-
-output "wp_server_ip" {
-  value = aws_instance.wp_server.*.private_ip
-}

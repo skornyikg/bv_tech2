@@ -1,19 +1,10 @@
 variable "name" {
-  default = "bv-wordpress"
+  default = "bv_wordpress"
 }
 
 variable "environment" {
   default = "test"
 }
-
-variable "create_igw" {
-  default = true
-}
-
-variable "bv_vpc_id" {
-  description = "destination VPC id"
-}
-
 variable "bv_network_cidr" {
   description = "VPV base CIDR"
 }
@@ -47,3 +38,4 @@ variable "map_public_ip_on_launch" {
 data "aws_availability_zones" "available" {
   state = "available"
 }
+

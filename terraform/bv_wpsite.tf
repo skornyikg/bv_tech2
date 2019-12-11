@@ -1,6 +1,3 @@
-/*
-TODO 
-*/
 
 provider "aws" {
   region      = var.aws_region
@@ -34,11 +31,7 @@ module "bv_network" {
   source                  = "./modules/bv_network"
   name                    = "bv_wordpress"
   environment             = "test"
-  
-  create_igw              = var.create_igw
-
-  bv_vpc_id               = var.bv_vpc_id
-  bv_network_cidr         = var.bv_network_cidr
+  bv_network_cidr         = "10.10.0.0/21"
   map_public_ip_on_launch = true
   #subnets_cidrs           = cidrsubnets("10.10.0.0/21", 4, 4, 4, 4)
   subnets_cidrs           = var.subnets_cidrs
@@ -48,31 +41,31 @@ module "sg_ssh" {
   source            = "./modules/sg_ssh"
   name_prefix       = "ssh"
   environment       = "test"
-  vpc_id            = var.bv_vpc_id
-  source_cidr_block = "${data.external.hostname.result["ip"]}/32"
+  vpc_id            = module.bv_network.vpc_id
+  source_cidr_block = data.external.hostname.result["ip"]
 }
 
 module "sg_web" {
   source            = "./modules/sg_web"
   name_prefix       = "web"
   environment       = "test"
-  vpc_id            = var.bv_vpc_id
-  source_cidr_block = "${data.external.hostname.result["ip"]}/32"
+  vpc_id            = module.bv_network.vpc_id
+  source_cidr_block = data.external.hostname.result["ip"]
 }
 
 module "sg_elb" {
   source            = "./modules/sg_elb"
   name_prefix       = "elb"
   environment       = "test"
-  vpc_id            = var.bv_vpc_id
-  source_cidr_block = "${data.external.hostname.result["ip"]}/32"
+  vpc_id            = module.bv_network.vpc_id
+  source_cidr_block = data.external.hostname.result["ip"]
 }
 
 module "sg_rds" {
   source            = "./modules/sg_rds"
   name_prefix       = "rds"
   environment       = "test"
-  vpc_id            = var.bv_vpc_id
+  vpc_id            = module.bv_network.vpc_id
   security_group_id = module.sg_web.sg_web_id
 }
 
@@ -83,7 +76,7 @@ module "alb" {
   name                = "alb-test"
   load_balancer_type  = "application"
 
-  vpc_id              = var.bv_vpc_id
+  vpc_id              = module.bv_network.vpc_id
   subnets             = module.bv_network.public_subnet_ids
   security_groups     = [module.sg_elb.sg_elb_id]
 
@@ -170,7 +163,6 @@ resource "aws_alb_target_group_attachment" "tg_bv_wp" {
 
 
 resource "aws_route53_record" "wp_server_domain" {
-
   count = var.create_domain ? 1 : 0
 
   zone_id     = var.hosted_zone_id
@@ -183,4 +175,6 @@ resource "aws_route53_record" "wp_server_domain" {
     evaluate_target_health = false
   }
 }
+
+
 

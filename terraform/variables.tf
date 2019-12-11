@@ -3,10 +3,6 @@ variable aws_region {
   default = "us-east-1"
 }
 
-variable "bv_vpc_id" {
-  description = "destination VPC id"
-}
-
 variable "bv_network_cidr" {
   description = "CIDR block of the VPC"
   default     = "10.10.0.0/21"
@@ -23,7 +19,7 @@ variable "ec2_key_name" {
 
 variable "ec2_public_key" {
   description = "public key of the EC2 instance"
-  default     = "ssh-rsa AAAAB"
+  default     = "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAgVgN/m79bOC26qz8q7/YBXC12ebxdNdCmlVHavop63MnF0FnClxDQTszxdPqZ1Q96QiegE3kZQP6v61q7fV+2Ow+OFgcBV1GXeOqWrqqwwMg0a5w/yVcRc9kaHmSXqSdxSTJnwn/vXItNktzlfNoO76jWwhKIodIxjKsCnKbGct8/+VTmlI9J5tNwOfhZuvPL+9u2pqpCiaU+xQZLueQ3hePn2CS8bUdLtq7SWqFhlUS+nvQDJs5AEl3PsPNimukGCax5KCzU1QV0wp+dKBuuGahJvRZC/3HjuIwGyOvqmu/Gwmw9huAafBrI0vOJwyEyztRrnEl0VF5ppZJ3eYa2w=="
 }
 
 variable rds_admin_password {
@@ -54,6 +50,3 @@ variable "create_domain" {
   default = true
 }
 
-variable "create_igw" {
-  default = true
-}
